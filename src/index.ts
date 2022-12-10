@@ -25,7 +25,7 @@ Bun.serve({
             return authenticatedMiddleware(req, postHeartbeats);
           case "/api/v1/plugins/errors":
             // returns a 200 but doesn't store the errors
-            return new Response();
+            return new Response("", { status: 201 });
           case "/api/v1/users/signup":
             return postSignup(req);
           case "/api/v1/users/login":
