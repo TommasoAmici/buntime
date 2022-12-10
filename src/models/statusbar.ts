@@ -15,7 +15,7 @@ export const getStatusbarData = (
         FROM
               heartbeats h
         WHERE
-              user_id = $userID)
+              user_id = $userID AND created_at >= DATE('now', 'start of day'))
         SELECT
           project,
           time_spent as timeSpent,
