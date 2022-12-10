@@ -23,6 +23,9 @@ Bun.serve({
         switch (pathname) {
           case "/api/v1/users/current/heartbeats.bulk":
             return authenticatedMiddleware(req, postHeartbeats);
+          case "/api/v1/plugins/errors":
+            // returns a 200 but doesn't store the errors
+            return new Response();
           case "/api/v1/users/signup":
             return postSignup(req);
           case "/api/v1/users/login":
