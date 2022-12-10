@@ -10,6 +10,11 @@ I wrote this to try out Bun for web development. It uses [Bun's built-in SQLite 
 to store data, and it uses [Bun's built-in HTTP server](https://github.com/oven-sh/bun#bunserve---fast-http-server)
 for the API.
 
+This project is definitely not feature complete, so if you found this while looking for
+a self-hostable backend compatible with Wakatime plugins, check out
+[Hakatime](https://github.com/mujx/hakatime) and [Wakapi](https://github.com/muety/wakapi)
+in the meantime.
+
 ## Getting started
 
 To install dependencies:
@@ -35,7 +40,7 @@ This project was created using `bun init` in bun v0.3.0. [Bun](https://bun.sh) i
 ```toml
 [settings]
 status_bar_enabled = true
-api_key = waka_XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+api_key = "waka_XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
 api_url = "http://127.0.0.1:3000/api/v1/users/current/heartbeats.bulk"
 ```
 
