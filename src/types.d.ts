@@ -28,10 +28,10 @@ type Status = {
   minutes: number; // 0
   text: string; // "0 secs"
   total_seconds: number; // 0.0
+  seconds: number; // 0
 };
 
 type DetailedStatus = Status & {
-  seconds: number; // 0
   percent: number; // 0
   name: string; // "Coding"
 };

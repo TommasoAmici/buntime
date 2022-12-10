@@ -28,3 +28,15 @@ export const formatDurationDigital = (d: number) => {
 
   return `${padTime(h)}:${padTime(m)}:${padTime(s)}`;
 };
+
+export const durationStatus = (d: number): Status => {
+  return {
+    decimal: (d / 3600).toFixed(2),
+    digital: formatDurationDigital(d),
+    hours: hoursFromSeconds(d),
+    minutes: minutesFromSeconds(d),
+    text: formatDuration(d),
+    seconds: secondsFromSeconds(d),
+    total_seconds: d,
+  };
+};

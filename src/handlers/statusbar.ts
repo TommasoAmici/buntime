@@ -1,10 +1,4 @@
-import {
-  formatDuration,
-  formatDurationDigital,
-  hoursFromSeconds,
-  minutesFromSeconds,
-  secondsFromSeconds,
-} from "../lib/duration.js";
+import { durationStatus } from "../lib/duration.js";
 import { getStatusbarData } from "../models/statusbar.js";
 
 type StatusbarResponse = {
@@ -24,17 +18,11 @@ type StatusbarResponse = {
 
 export async function getStatusbar(req: Request, userID: number) {
   const data = getStatusbarData(userID);
-  const projects = data.map((d) => ({
+  const projects: Project[] = data.map((d) => ({
     color: null,
-    decimal: (d.timeSpent / 3600).toFixed(2),
-    digital: formatDurationDigital(d.timeSpent),
-    hours: hoursFromSeconds(d.timeSpent),
-    minutes: minutesFromSeconds(d.timeSpent),
     name: d.project,
-    text: formatDuration(d.timeSpent),
     percent: d.timePercentage * 100,
-    seconds: secondsFromSeconds(d.timeSpent),
-    total_seconds: d.timeSpent,
+    ...durationStatus(d.timeSpent),
   }));
   const response: StatusbarResponse = {
     cached_at: new Date(),
@@ -66,14 +54,9 @@ export async function getStatusbar(req: Request, userID: number) {
           total_seconds: 0.0,
         },
       ],
-      grand_total: {
-        decimal: "0.00",
-        digital: "0:00",
-        hours: 0,
-        minutes: 0,
-        text: "0 secs",
-        total_seconds: 0.0,
-      },
+      grand_total: durationStatus(
+        data.map((d) => d.timeSpent).reduce((a, b) => a + b)
+      ),
       languages: [
         {
           decimal: "0.00",
