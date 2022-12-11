@@ -55,7 +55,9 @@ export async function getStatusbar(req: Request, userID: number) {
         },
       ],
       grand_total: durationStatus(
-        data.map((d) => d.timeSpent).reduce((a, b) => a + b)
+        data.length === 0
+          ? 0
+          : data.map((d) => d.timeSpent).reduce((a, b) => a + b)
       ),
       languages: [
         {
