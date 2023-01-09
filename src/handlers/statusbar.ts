@@ -1,5 +1,5 @@
 import { durationStatus } from "../lib/duration.js";
-import { getStatusbarData } from "../models/statusbar.js";
+import { getStatusbarData, TimePerCategory } from "../models/statusbar.js";
 
 type StatusbarResponse = {
   cached_at: Date;
@@ -16,14 +16,23 @@ type StatusbarResponse = {
   };
 };
 
-export async function getStatusbar(req: Request, userID: number) {
-  const data = getStatusbarData(userID);
-  const projects: Project[] = data.map((d) => ({
+const formatResponse = (data: TimePerCategory) =>
+  data.map((d) => ({
     color: null,
-    name: d.project,
+    name: d.name,
     percent: d.timePercentage * 100,
     ...durationStatus(d.timeSpent),
   }));
+
+export async function getStatusbar(req: Request, userID: number) {
+  const data = getStatusbarData(userID);
+  const projects: Project[] = formatResponse(data.projects);
+  const languages: Language[] = formatResponse(data.languages);
+  const grandTotal = durationStatus(
+    data.projects.length === 0
+      ? 0
+      : data.projects.map((d) => d.timeSpent).reduce((a, b) => a + b)
+  );
   const response: StatusbarResponse = {
     cached_at: new Date(),
     data: {
@@ -54,24 +63,8 @@ export async function getStatusbar(req: Request, userID: number) {
           total_seconds: 0.0,
         },
       ],
-      grand_total: durationStatus(
-        data.length === 0
-          ? 0
-          : data.map((d) => d.timeSpent).reduce((a, b) => a + b)
-      ),
-      languages: [
-        {
-          decimal: "0.00",
-          digital: "0:00:00",
-          hours: 0,
-          minutes: 0,
-          name: "TypeScript",
-          percent: 0,
-          seconds: 0,
-          text: "0 secs",
-          total_seconds: 0.0,
-        },
-      ],
+      grand_total: grandTotal,
+      languages,
       machines: [
         {
           decimal: "0.00",
