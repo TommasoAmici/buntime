@@ -10,7 +10,7 @@ import { getStatusbar } from "./handlers/statusbar.js";
 Bun.serve({
   async fetch(req: Request) {
     const { pathname } = new URL(req.url);
-    console.log(req.method, pathname);
+    console.log(`${req.method}\t${pathname}`);
 
     switch (req.method) {
       case "GET":
