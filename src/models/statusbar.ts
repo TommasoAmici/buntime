@@ -11,21 +11,24 @@ const getTimePerProject = (userID: number): TimePerCategory => {
     .query(
       `
         WITH time_per_project AS (
-        SELECT
-              project,
-              created_at,
-              time,
-              time - LAG (time, 1, time) OVER (ORDER BY time) AS time_spent
-        FROM
-              heartbeats h
-        WHERE
-              user_id = $userID AND created_at >= DATE('now', 'start of day'))
+          SELECT
+            project,
+            created_at,
+            time,
+            time - LAG (time, 1, time) OVER (ORDER BY time) AS time_spent
+          FROM
+            heartbeats h
+          WHERE
+            user_id = $userID AND created_at >= DATE('now', 'start of day')
+          ORDER BY id
+          LIMIT -1
+          OFFSET 1
+        )
         SELECT
           project as name,
           time_spent as timeSpent,
           time_spent / (SELECT SUM(time_spent) FROM time_per_project) as timePercentage
-        FROM
-          (
+        FROM (
           SELECT
             project,
             SUM(time_spent) AS time_spent
@@ -46,21 +49,24 @@ const getTimePerLanguage = (userID: number): TimePerCategory => {
     .query(
       `
         WITH time_per_language AS (
-        SELECT
-              language,
-              created_at,
-              time,
-              time - LAG (time, 1, time) OVER (ORDER BY time) AS time_spent
-        FROM
-              heartbeats h
-        WHERE
-              user_id = $userID AND created_at >= DATE('now', 'start of day'))
+          SELECT
+            language,
+            created_at,
+            time,
+            time - LAG (time, 1, time) OVER (ORDER BY time) AS time_spent
+          FROM
+            heartbeats h
+          WHERE
+            user_id = $userID AND created_at >= DATE('now', 'start of day')
+          ORDER BY id
+          LIMIT -1
+          OFFSET 1
+        )
         SELECT
           language as name,
           time_spent as timeSpent,
           time_spent / (SELECT SUM(time_spent) FROM time_per_language) as timePercentage
-        FROM
-          (
+        FROM (
           SELECT
             language,
             SUM(time_spent) AS time_spent
@@ -69,7 +75,7 @@ const getTimePerLanguage = (userID: number): TimePerCategory => {
           GROUP BY
             language
           ORDER BY time_spent DESC
-         )
+        )
 `
     )
     .all({ $userID: userID });
@@ -81,21 +87,24 @@ const getTimePerBranch = (userID: number): TimePerCategory => {
     .query(
       `
         WITH time_per_branch AS (
-        SELECT
-              branch,
-              created_at,
-              time,
-              time - LAG (time, 1, time) OVER (ORDER BY time) AS time_spent
-        FROM
-              heartbeats h
-        WHERE
-              user_id = $userID AND created_at >= DATE('now', 'start of day'))
+          SELECT
+            branch,
+            created_at,
+            time,
+            time - LAG (time, 1, time) OVER (ORDER BY time) AS time_spent
+          FROM
+            heartbeats h
+          WHERE
+            user_id = $userID AND created_at >= DATE('now', 'start of day')
+          ORDER BY id
+          LIMIT -1
+          OFFSET 1
+        )
         SELECT
           branch as name,
           time_spent as timeSpent,
           time_spent / (SELECT SUM(time_spent) FROM time_per_branch) as timePercentage
-        FROM
-          (
+        FROM (
           SELECT
             branch,
             SUM(time_spent) AS time_spent
